@@ -3,6 +3,8 @@ package com.xusheng;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.engine.RepositoryService;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.runtime.ProcessInstance;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,9 +24,13 @@ public class HelloAct {
 
     /**
      * 部署流程
+     * act_re_deployment 部署对象表
+     * act_re_procdef 流程定义表
+     * act_ge_bytearray 资源文件表
+     * act_ge_property 主键生成策略表
      */
     @Test
-    public void testDeploy() {
+    public void deploy() {
         RepositoryService repositoryService = processEngine.getRepositoryService();
         repositoryService.createDeployment()
                 .addClasspathResource("diagrams/contractAuditing.bpmn")
@@ -35,5 +41,13 @@ public class HelloAct {
         System.out.println("合同流程部署成功");
     }
 
+    @Test
+    public void startProcess() {
+        String key = "contract";
+        RuntimeService runtimeService = processEngine.getRuntimeService();
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(key);
+        System.out.println(processInstance.getId());
+        System.out.println(processInstance.getProcessDefinitionId());
+    }
 
 }
